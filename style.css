@@ -1,0 +1,392 @@
+:root {
+    --primary: #6C63FF;
+    --secondary: #FF6584;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-color: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Background Blobs */
+.background-blobs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float 10s infinite ease-in-out;
+}
+
+.blob-1 { width: 400px; height: 400px; background: #ff00cc; top: -100px; left: -100px; }
+.blob-2 { width: 300px; height: 300px; background: #00ccff; bottom: -50px; right: -50px; animation-delay: -2s; }
+.blob-3 { width: 200px; height: 200px; background: #ccff00; top: 40%; left: 40%; animation-delay: -4s; }
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -30px); }
+}
+
+/* Common UI */
+.hidden { display: none !important; }
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn.primary { background: var(--primary); color: white; }
+.btn.secondary { background: rgba(255, 255, 255, 0.2); color: white; }
+
+input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    outline: none;
+}
+
+input::placeholder { color: var(--text-muted); }
+
+/* Login Screen */
+#loginScreen {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.highlight { color: var(--secondary); }
+
+.input-group { margin-bottom: 20px; }
+.input-group input { width: 100%; font-size: 1.2rem; text-align: center; }
+
+.divider { margin: 20px 0; color: var(--text-muted); font-size: 0.9rem; }
+
+.join-group { display: flex; gap: 10px; }
+.join-group input { flex: 1; }
+
+/* Game Screen */
+#gameScreen {
+    height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Header */
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+}
+
+.timer-box {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--secondary);
+}
+
+.word-display {
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    gap: 15px;
+    min-height: 0; /* Important for flex scrolling */
+}
+
+/* Sidebar */
+.players-sidebar {
+    width: 200px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+#playerList {
+    list-style: none;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.player-item.is-drawer { border: 1px solid var(--primary); }
+.player-item.has-guessed { background: rgba(0, 255, 0, 0.2); }
+
+/* Canvas Area */
+.canvas-area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: white; /* Canvas needs white bg */
+}
+
+#drawingCanvas {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 14px;
+}
+
+.overlay-content {
+    text-align: center;
+    color: white;
+}
+
+/* Toolbar */
+.toolbar {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    color: #333;
+}
+
+.colors {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    max-width: 300px;
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.color-swatch:hover { transform: scale(1.1); }
+
+.tools {
+    display: flex;
+    gap: 10px;
+}
+
+.tool {
+    padding: 5px 10px;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.tool.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Chat */
+.chat-sidebar {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chat-msg {
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.2);
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+.chat-msg.system { color: #ffd700; font-style: italic; background: none; }
+.chat-msg.correct { color: #00ff00; font-weight: bold; background: rgba(0, 255, 0, 0.1); }
+
+.chat-input-area input {
+    width: 100%;
+}
+
+/* Mobile Responsive */
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    /* Global Adjustments */
+    .title { font-size: 2rem; margin-bottom: 20px; }
+    .card { padding: 20px; max-width: 90%; }
+    .input-group input { font-size: 1rem; }
+    
+    /* Game Screen Layout */
+    #gameScreen { padding: 10px; height: 100vh; display: flex; flex-direction: column; }
+    
+    .game-container { 
+        gap: 10px; 
+        max-height: 100%;
+    }
+
+    /* Compact Header */
+    .game-header {
+        padding: 10px;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+    
+    .timer-box { font-size: 1.5rem; order: 1; }
+    .word-display { 
+        font-size: 1.2rem; 
+        letter-spacing: 2px; 
+        order: 3; 
+        width: 100%; 
+        text-align: center; 
+        margin-top: 5px;
+    }
+    .game-info { font-size: 0.9rem; order: 2; }
+
+    /* Main Content Reordering */
+    .main-content {
+        flex-direction: column;
+        overflow: hidden; /* Prevent body scroll */
+        gap: 10px;
+    }
+
+    @keyframes slideUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Player List - Priority 2 (Compact Strip) */
+    .players-sidebar {
+        order: 2;
+        width: 100%;
+        height: auto;
+        max-height: 80px;
+        padding: 5px;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 8px;
+    }
+    
+    .player-item {
+        min-width: 100px;
+        margin-bottom: 0;
+        padding: 5px;
+        font-size: 0.8rem;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .player-item .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
+    /* Chat Area - Priority 3 */
+    .chat-sidebar {
+        order: 3;
+        width: 100%;
+        height: 150px; /* Fixed height for chat */
+        flex: none;
+        padding: 10px;
+    }
+    
+    .chat-messages { font-size: 0.8rem; }
+    .chat-input-area input { padding: 8px; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+    .word-display { font-size: 1rem; letter-spacing: 1px; }
+    .timer-box { font-size: 1.2rem; }
+    .canvas-area { min-height: 35vh; }
+}

@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6C63FF;
+  --color-secondary: #FF6584;
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+  --color-text-muted: rgba(255, 255, 255, 0.7);
+  
+  --font-sans: 'Outfit', sans-serif;
+  
+  --background-image-bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+@layer base {
+  body {
+    @apply font-sans text-white h-screen overflow-hidden;
+    background-image: var(--background-image-bg-gradient);
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/10 backdrop-blur-md border border-glass-border rounded-2xl shadow-lg;
+  }
+  
+  .btn {
+    @apply px-6 py-3 border-none rounded-lg font-semibold cursor-pointer transition-all duration-200 font-[inherit] hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white;
+  }
+
+  .btn-secondary {
+    @apply bg-white/20 text-white;
+  }
+}
+
+/* Background Blobs */
+.background-blobs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float 10s infinite ease-in-out;
+}
+
+.blob-1 { width: 400px; height: 400px; background: #ff00cc; top: -100px; left: -100px; }
+.blob-2 { width: 300px; height: 300px; background: #00ccff; bottom: -50px; right: -50px; animation-delay: -2s; }
+.blob-3 { width: 200px; height: 200px; background: #ccff00; top: 40%; left: 40%; animation-delay: -4s; }
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -30px); }
+}

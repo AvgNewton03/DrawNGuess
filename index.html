@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draw&Guess</title>
+    <link href="style.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="background-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <div id="app">
+      <!-- Login / Lobby Screen -->
+      <div id="loginScreen" class="screen">
+        <div class="card glass-panel">
+          <h1 class="title">Draw<span class="highlight">&</span>Guess</h1>
+          <div class="input-group">
+            <input
+              type="text"
+              id="usernameInput"
+              placeholder="Enter your nickname"
+              maxlength="15"
+            />
+          </div>
+          <div class="actions">
+            <button id="createGameBtn" class="btn primary">
+              Create Private Room
+            </button>
+            <div class="divider">OR</div>
+            <div class="join-group">
+              <input type="text" id="roomIdInput" placeholder="Room ID" />
+              <button id="joinGameBtn" class="btn secondary">Join Room</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Screen -->
+      <div id="gameScreen" class="screen hidden">
+        <div class="game-container">
+          <!-- Header: Timer, Word, Round -->
+          <div class="game-header glass-panel">
+            <div class="timer-box">
+              <span id="timer">60</span>
+            </div>
+            <div class="word-display">
+              <span id="currentWord">WAITING FOR PLAYERS...</span>
+            </div>
+            <div class="game-info">
+              <span id="roomIdDisplay">Room: ----</span>
+            </div>
+          </div>
+
+          <div class="main-content">
+            <!-- Player List -->
+            <div class="players-sidebar glass-panel">
+              <h3>Players</h3>
+              <ul id="playerList">
+                <!-- Players injected here -->
+              </ul>
+            </div>
+
+            <!-- Canvas Area -->
+            <div class="canvas-area glass-panel">
+              <div id="overlay" class="overlay hidden">
+                <div class="overlay-content">
+                  <h2 id="overlayText">Round Starting!</h2>
+                </div>
+              </div>
+              <!-- Tools Bar -->
+              <div id="toolsBar" class="tools-bar hidden">
+                <div class="tool-group">
+                  <button id="undoBtn" class="tool-btn" title="Undo">↩️</button>
+                  <button id="redoBtn" class="tool-btn" title="Redo">↪️</button>
+                </div>
+                <div class="tool-group">
+                  <button id="brushTool" class="tool-btn active" title="Brush">
+                    ✏️
+                  </button>
+                  <button id="eraserTool" class="tool-btn" title="Eraser">
+                    🧹
+                  </button>
+                  <button id="clearTool" class="tool-btn" title="Clear All">
+                    🗑️
+                  </button>
+                </div>
+                <div
+                  class="color-swatch"
+                  style="background: #00cc00"
+                  data-color="#00cc00"
+                ></div>
+                <div
+                  class="color-swatch"
+                  style="background: #00b2ff"
+                  data-color="#00b2ff"
+                ></div>
+                <div
+                  class="color-swatch"
+                  style="background: #231fd3"
+                  data-color="#231fd3"
+                ></div>
+                <div
+                  class="color-swatch"
+                  style="background: #a300ba"
+                  data-color="#a300ba"
+                ></div>
+                <div
+                  class="color-swatch"
+                  style="background: #d37caa"
+                  data-color="#d37caa"
+                ></div>
+                <div
+                  class="color-swatch"
+                  style="background: #a0522d"
+                  data-color="#a0522d"
+                ></div>
+              </div>
+
+              <canvas id="drawingCanvas"></canvas>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-sidebar glass-panel">
+              <div id="chatMessages" class="chat-messages"></div>
+              <div class="chat-input-area">
+                <input
+                  type="text"
+                  id="chatInput"
+                  placeholder="Type your guess here..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Leaderboard Screen -->
+      <div id="leaderboardScreen" class="screen hidden">
+        <div class="card glass-panel">
+          <h1 class="title">Game Over!</h1>
+          <div id="finalScores" class="leaderboard-list">
+            <!-- Scores injected here -->
+          </div>
+          <button
+            id="playAgainBtn"
+            class="btn primary"
+            onclick="location.reload()"
+          >
+            Play Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
