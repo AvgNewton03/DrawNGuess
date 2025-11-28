@@ -146,8 +146,8 @@ function Canvas({ socket, isDrawer }) {
   // I will implement the UI but maybe disable them or just log "Not implemented".
   
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 relative cursor-crosshair touch-none">
+    <div className="flex flex-col h-full w-full min-h-0">
+      <div className="flex-1 relative cursor-crosshair touch-none min-h-0" style={{ touchAction: 'none' }}>
         <canvas
           ref={canvasRef}
           className="w-full h-full block"
@@ -155,9 +155,18 @@ function Canvas({ socket, isDrawer }) {
           onMouseMove={draw}
           onMouseUp={stopDraw}
           onMouseOut={stopDraw}
-          onTouchStart={startDraw}
-          onTouchMove={draw}
-          onTouchEnd={stopDraw}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            startDraw(e);
+          }}
+          onTouchMove={(e) => {
+            e.preventDefault();
+            draw(e);
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            stopDraw();
+          }}
         />
       </div>
       

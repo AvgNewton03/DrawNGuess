@@ -34,12 +34,13 @@ function Chat({ socket, username }) {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto flex flex-col gap-2 mb-3 min-h-0">
+      <h3 className="font-bold mb-2 text-xs sm:text-sm md:text-base hidden md:block">Chat</h3>
+      <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 sm:gap-2 mb-2 sm:mb-3 min-h-0">
         {messages.map((msg) => (
           <div 
             key={msg.id} 
             className={cn(
-              "p-2 rounded text-sm break-words",
+              "p-1.5 sm:p-2 rounded text-xs sm:text-sm break-words",
               msg.type === 'correct' ? "bg-green-500/20 text-green-400 font-bold" : 
               msg.username === 'System' ? "text-yellow-400 italic" : "bg-black/20"
             )}
@@ -51,11 +52,11 @@ function Chat({ socket, username }) {
         <div ref={messagesEndRef} />
       </div>
       
-      <form onSubmit={sendMessage} className="mt-auto">
+      <form onSubmit={sendMessage} className="mt-auto flex-shrink-0">
         <input
           type="text"
-          className="w-full bg-black/20 border border-glass-border p-2 rounded text-white text-sm outline-none placeholder:text-text-muted"
-          placeholder="Type your guess here..."
+          className="w-full bg-black/20 border border-glass-border p-1.5 sm:p-2 rounded text-white text-xs sm:text-sm outline-none placeholder:text-text-muted"
+          placeholder="Type your guess..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />

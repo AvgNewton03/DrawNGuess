@@ -15,16 +15,16 @@ function LoginScreen({ onCreateGame, onJoinGame }) {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center p-5">
-      <div className="glass-panel p-10 w-full max-w-md text-center">
-        <h1 className="text-5xl mb-8 font-extrabold drop-shadow-lg">
+    <div className="h-full w-full flex items-center justify-center p-4 sm:p-5 md:p-6">
+      <div className="glass-panel p-6 sm:p-8 md:p-10 w-full max-w-md text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl mb-6 sm:mb-7 md:mb-8 font-extrabold drop-shadow-lg">
           Draw<span className="text-secondary">&</span>Guess
         </h1>
         
-        <div className="mb-5">
+        <div className="mb-4 sm:mb-5">
           <input
             type="text"
-            className="w-full bg-black/20 border border-glass-border p-3 rounded-lg text-white text-center text-xl outline-none placeholder:text-text-muted"
+            className="w-full bg-black/20 border border-glass-border p-2.5 sm:p-3 rounded-lg text-white text-center text-base sm:text-lg md:text-xl outline-none placeholder:text-text-muted"
             placeholder="Enter your nickname"
             maxLength={15}
             value={username}
@@ -32,21 +32,21 @@ function LoginScreen({ onCreateGame, onJoinGame }) {
           />
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 sm:gap-4">
           <button onClick={handleCreate} className="btn btn-primary w-full">
             Create Private Room
           </button>
           
-          <div className="flex items-center gap-4 text-text-muted text-sm">
+          <div className="flex items-center gap-3 sm:gap-4 text-text-muted text-xs sm:text-sm">
             <div className="h-px bg-glass-border flex-1"></div>
             OR
             <div className="h-px bg-glass-border flex-1"></div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input 
               type="text" 
-              className="flex-1 bg-black/20 border border-glass-border p-3 rounded-lg text-white outline-none placeholder:text-text-muted"
+              className="flex-1 bg-black/20 border border-glass-border p-2.5 sm:p-3 rounded-lg text-white text-center sm:text-left outline-none placeholder:text-text-muted text-sm sm:text-base"
               placeholder="Room ID"
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}

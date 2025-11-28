@@ -98,7 +98,7 @@ function App() {
   };
 
   return (
-    <div className="app-container relative min-h-screen">
+    <div className="app-container relative w-full h-full overflow-hidden">
       <div className="background-blobs">
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
