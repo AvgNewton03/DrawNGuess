@@ -22,12 +22,19 @@ function App() {
   // Overlay State
   const [overlay, setOverlay] = useState({ show: false, text: '', subtext: '' });
 
+  const [isConnected, setIsConnected] = useState(false);
+
   useEffect(() => {
     const newSocket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000');
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
       console.log('Connected to server');
+      setIsConnected(true);
+    });
+
+    newSocket.on('disconnect', () => {
+      setIsConnected(false);
     });
 
     newSocket.on('gameCreated', (data) => {
@@ -106,7 +113,7 @@ function App() {
       </div>
 
       {gameState === 'login' && (
-        <LoginScreen onCreateGame={createGame} onJoinGame={joinGame} />
+        <LoginScreen onCreateGame={createGame} onJoinGame={joinGame} isConnected={isConnected} />
       )}
 
       {gameState === 'game' && (
