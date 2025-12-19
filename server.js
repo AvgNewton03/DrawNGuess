@@ -336,6 +336,11 @@ io.on('connection', (socket) => {
         socket.to(currentRoomId).emit('clearCanvas');
     });
 
+    socket.on('beginPath', () => {
+        if (!currentRoomId || !rooms[currentRoomId]) return;
+        socket.to(currentRoomId).emit('beginPath');
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
         if (currentRoomId && rooms[currentRoomId]) {

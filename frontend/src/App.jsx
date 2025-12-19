@@ -23,7 +23,7 @@ function App() {
   const [overlay, setOverlay] = useState({ show: false, text: '', subtext: '' });
 
   useEffect(() => {
-    const newSocket = io(import.meta.env.PROD ? undefined : 'http://localhost:3000');
+    const newSocket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000');
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

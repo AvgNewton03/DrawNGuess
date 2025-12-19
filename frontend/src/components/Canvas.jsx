@@ -3,6 +3,7 @@ import Toolbar from './Toolbar';
 
 function Canvas({ socket, isDrawer }) {
   const canvasRef = useRef(null);
+  const lastPosRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
   const [currentColor, setCurrentColor] = useState('#000000');
   const [currentSize, setCurrentSize] = useState(5);
@@ -35,77 +36,115 @@ function Canvas({ socket, isDrawer }) {
       
       ctx.lineWidth = data.size;
       ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
       ctx.strokeStyle = data.isEraser ? '#ffffff' : data.color;
 
-      ctx.lineTo(data.x * w, data.y * h);
-      ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(data.x * w, data.y * h);
+      ctx.moveTo(data.from.x * w, data.from.y * h);
+      ctx.lineTo(data.to.x * w, data.to.y * h);
+      ctx.stroke();
     };
 
     const handleClear = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
-    const handleBeginPath = () => {
-      ctx.beginPath();
-    };
-
     socket.on('draw', handleDraw);
     socket.on('clearCanvas', handleClear);
-    socket.on('beginPath', handleBeginPath); // Optional: if server emits this
 
     return () => {
       socket.off('draw', handleDraw);
       socket.off('clearCanvas', handleClear);
-      socket.off('beginPath', handleBeginPath);
     };
   }, [socket]);
 
+  // Helper to get coordinates
+  const getPos = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    let clientX, clientY;
+
+    if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+    } else if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+
+    if (clientX === undefined || clientY === undefined) return null;
+
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  };
+
   const startDraw = (e) => {
     if (!isDrawer) return;
-    setDrawing(true);
-    draw(e);
-  };
-
-  const stopDraw = () => {
-    setDrawing(false);
-    const ctx = canvasRef.current.getContext('2d');
-    ctx.beginPath();
-    // socket.emit('beginPath'); // Optional: sync path reset
-  };
-
-  const draw = (e) => {
-    if (!drawing || !isDrawer) return;
+    
+    const pos = getPos(e);
+    if (!pos) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const rect = canvas.getBoundingClientRect();
-    
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-    
-    if (!clientX || !clientY) return;
 
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
-    ctx.lineWidth = currentSize;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = tool === 'eraser' ? '#ffffff' : currentColor;
-
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    // Start fresh path
     ctx.beginPath();
-    ctx.moveTo(x, y);
-
+    ctx.moveTo(pos.x, pos.y);
+    // Draw a single dot
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    
+    setDrawing(true);
+    lastPosRef.current = pos;
+    
+    // Emit single point draw
     socket.emit('draw', {
-      x: x / canvas.width,
-      y: y / canvas.height,
+      from: { x: pos.x / canvas.width, y: pos.y / canvas.height },
+      to: { x: pos.x / canvas.width, y: pos.y / canvas.height },
       color: tool === 'eraser' ? '#ffffff' : currentColor,
       size: currentSize,
       isEraser: tool === 'eraser'
     });
+  };
+
+  const stopDraw = () => {
+    setDrawing(false);
+    lastPosRef.current = null;
+  };
+
+  const draw = (e) => {
+    if (!drawing || !isDrawer || !lastPosRef.current) return;
+
+    const pos = getPos(e);
+    if (!pos) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    ctx.lineWidth = currentSize;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = tool === 'eraser' ? '#ffffff' : currentColor;
+
+    ctx.beginPath();
+    ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+
+    socket.emit('draw', {
+      from: { x: lastPosRef.current.x / canvas.width, y: lastPosRef.current.y / canvas.height },
+      to: { x: pos.x / canvas.width, y: pos.y / canvas.height },
+      color: tool === 'eraser' ? '#ffffff' : currentColor,
+      size: currentSize,
+      isEraser: tool === 'eraser'
+    });
+
+    lastPosRef.current = pos;
   };
 
   const handleClear = () => {
@@ -164,6 +203,10 @@ function Canvas({ socket, isDrawer }) {
             draw(e);
           }}
           onTouchEnd={(e) => {
+            e.preventDefault();
+            stopDraw();
+          }}
+          onTouchCancel={(e) => {
             e.preventDefault();
             stopDraw();
           }}
